@@ -18,10 +18,11 @@ documents = [
 
 query = "tell me about bumrah"
 
-doc_embeddings = embedding.embed_documents(documents) ## The contextual meaning of documents is stored in the result
-query_embedding = embedding.embed_query(query) ## The contextual meaning of query is stored in the result
+doc_embeddings = np.array(embedding.embed_documents(documents)) ## The contextual meaning of documents is stored in the result
+query_embedding = np.array(embedding.embed_query(query)).reshape(1,-1) ## The contextual meaning of query is stored in the result
 
-scores = cosine_similarity([query_embedding], doc_embeddings)[0] ## Cosine similarity between query and documents
+
+scores = cosine_similarity(query_embedding, doc_embeddings)[0] ## Cosine similarity between query and documents
 
 index,score = sorted(list(enumerate(scores)),key = lambda x: x[1])[-1]## Sort the documents based on similarity score
 

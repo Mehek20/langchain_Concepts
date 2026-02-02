@@ -16,7 +16,7 @@ parser = StrOutputParser()
 
 class Feedback(BaseModel):
 
-    sentiment: Literal['positive', 'negative'] = Field(description="The sentiment of the feedback")
+    sentiment: Literal['positive', 'negetive'] = Field(description="The sentiment of the feedback")
 
 parser2 = PydanticOutputParser(pydantic_object=Feedback)
 
@@ -48,12 +48,13 @@ prompt3 = PromptTemplate(
 # )
 
 branch_chain = RunnableBranch(
-    (lambda x:x['sentiment'] == 'positive',prompt2 | model1 | parser),
-    (lambda x:x['sentiment'] == 'negetive',prompt3 | model1 | parser),
+    (RunnableLambda(lambda x: x.sentiment == 'positive'),prompt2 | model1 | parser),
+    (RunnableLambda(lambda x: x.sentiment == 'negetive'),prompt3 | model1 | parser),
     RunnableLambda(lambda x :"could not find sentiment") # default chain this will not not run directly as it is not a part of chain so we have to convert it into a runnable
 )
 
 chain = classifier_chain | branch_chain
 result = chain.invoke({"feedback": "The product is great!"}) # Output: "Thank you for your positive feedback! We're glad you liked the product."
+print(result)
 
-chain.get_graph().print_ascii() ## This will print the graph of the chain in ASCII format.
+# chain.get_graph().print_ascii() ## This will print the graph of the chain in ASCII format.

@@ -8,7 +8,7 @@ load_dotenv()
 
 # Define the model
 llm = HuggingFaceEndpoint(
-    repo_id="google/gemma-3-27b-it",
+    repo_id="meta-llama/Llama-3.1-8B-Instruct",
     task="text-generation"
 )
 
